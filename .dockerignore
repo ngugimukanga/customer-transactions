@@ -1,0 +1,23 @@
+version: '3'
+services:
+  node-app:
+    build: .
+    ports:
+      - "3000:3000" # Map container port 3000 to localhost
+    environment:
+      - DB_HOST=db
+      - JWT_SECRET=mysecretkey
+      - RABBITMQ_URL=amqp://rabbitmq
+    depends_on:
+      - db
+      - rabbitmq
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: transactions
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "15672:15672" # RabbitMQ Web UI accessible on localhost
+      - "5672:5672"
