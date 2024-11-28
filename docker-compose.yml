@@ -1,23 +1,22 @@
-version: '3'
 services:
   node-app:
-    build: .
+    build: .  # Builds the Node.js app container from the Dockerfile in the current directory
     ports:
-      - "3000:3000" # Map container port 3000 to localhost
+      - "3000:3000"  # Maps port 3000 from the container to port 3000 on the host machine
     environment:
-      - DB_HOST=db
-      - JWT_SECRET=mysecretkey
-      - RABBITMQ_URL=amqp://rabbitmq
+      - DB_HOST=db  # Set database host to the MySQL container name 'db'
+      - JWT_SECRET=mysecretkey  # Secret key for JWT authentication
+      - RABBITMQ_URL=amqp://rabbitmq  # RabbitMQ URL for messaging queue
     depends_on:
-      - db
-      - rabbitmq
+      - db  # Ensures the app waits for the database container to be ready
+      - rabbitmq  # Ensures the app waits for RabbitMQ to be ready
   db:
-    image: mysql:5.7
+    image: mysql:5.7  # Use the MySQL 5.7 image from Docker Hub
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: transactions
+      MYSQL_ROOT_PASSWORD: password  # Root password for MySQL
+      MYSQL_DATABASE: transactions  # Default database to be created
   rabbitmq:
-    image: rabbitmq:management
+    image: rabbitmq:management  # Use RabbitMQ with the management plugin
     ports:
-      - "15672:15672" # RabbitMQ Web UI accessible on localhost
-      - "5672:5672"
+      - "15672:15672"  # RabbitMQ Web UI on port 15672
+      - "5672:5672"  # RabbitMQ AMQP protocol port
